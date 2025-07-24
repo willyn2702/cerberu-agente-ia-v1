@@ -70,6 +70,20 @@ def estadisticas():
     with open(os.path.join(DATA_FOLDER, "descargas.json"), "r", encoding="utf-8") as d_file:
         descargas = json.load(d_file)["descargas"]
     return jsonify({"visitas": visitas, "descargas": descargas})
+@app.route("/", methods=["GET"])
+
+def raiz():
+    return jsonify({
+        "mensaje": "Bienvenido a Cerberu IA 🎉",
+        "endpoints": [
+            "/visitar (POST)",
+            "/descargar (GET)",
+            "/comentar (POST)",
+            "/comentarios (GET)",
+            "/estadisticas (GET)"
+        ]
+    })
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
