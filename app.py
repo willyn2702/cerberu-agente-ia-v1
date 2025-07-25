@@ -13,7 +13,7 @@ FILES_AND_DEFAULTS = {
     "visitas.json": {"visitas": 0},
     "descargas.json": {"descargas": 0},
     "comentarios.json": {"comentarios": []},
-    "activaciones.json": {"usuarios": {}}  # IP o ID simulada como clave
+    "activaciones.json": {"usuarios": {}}
 }
 
 for filename, default in FILES_AND_DEFAULTS.items():
@@ -25,7 +25,7 @@ for filename, default in FILES_AND_DEFAULTS.items():
 app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
 
-# Función para obtener archivo como objeto JSON
+# Función para obtener archivo JSON
 def cargar_json(nombre):
     with open(os.path.join(DATA_FOLDER, nombre), "r", encoding="utf-8") as f:
         return json.load(f)
@@ -34,11 +34,13 @@ def cargar_json(nombre):
 def guardar_json(nombre, data):
     with open(os.path.join(DATA_FOLDER, nombre), "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-        
+
+# Página principal
 @app.route("/", methods=["GET"])
 def inicio():
     return render_template("index.html")
 
+# Contador de visitas
 @app.route("/visitar", methods=["POST"])
 def aumentar_visitas():
     data = cargar_json("visitas.json")
@@ -46,6 +48,7 @@ def aumentar_visitas():
     guardar_json("visitas.json", data)
     return jsonify({"mensaje": "Visita registrada", "total": data["visitas"]})
 
+# Descarga del ZIP
 @app.route("/descargar", methods=["GET"])
 def descargar_archivo():
     data = cargar_json("descargas.json")
@@ -53,6 +56,7 @@ def descargar_archivo():
     guardar_json("descargas.json", data)
     return send_file("cerberu-agente-ia.zip", as_attachment=True)
 
+# Agregar comentario
 @app.route("/comentar", methods=["POST"])
 def agregar_comentario():
     nuevo = request.get_json()
@@ -61,22 +65,24 @@ def agregar_comentario():
     guardar_json("comentarios.json", data)
     return jsonify({"mensaje": "Comentario agregado correctamente"})
 
+# Obtener comentarios
 @app.route("/comentarios", methods=["GET"])
 def obtener_comentarios():
     data = cargar_json("comentarios.json")
     return jsonify(data)
 
+# Ver estadísticas
 @app.route("/estadisticas", methods=["GET"])
 def estadisticas():
     visitas = cargar_json("visitas.json")["visitas"]
     descargas = cargar_json("descargas.json")["descargas"]
     return jsonify({"visitas": visitas, "descargas": descargas})
 
-# 🛡️ Sistema de activación
+# Activar cliente (sistema de prueba gratuita)
 @app.route("/activar", methods=["POST"])
 def activar_cliente():
     req = request.get_json()
-    user_id = req.get("id", request.remote_addr)  # IP como respaldo
+    user_id = req.get("id", request.remote_addr)
 
     activaciones = cargar_json("activaciones.json")
     usuarios = activaciones.get("usuarios", {})
@@ -113,7 +119,3 @@ def activar_cliente():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
-
-
-
