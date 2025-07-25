@@ -22,7 +22,7 @@ for filename, default in FILES_AND_DEFAULTS.items():
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(default, f, indent=4)
 
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
 
 # Función para obtener archivo como objeto JSON
@@ -37,17 +37,7 @@ def guardar_json(nombre, data):
 
 @app.route("/", methods=["GET"])
 def inicio():
-    return jsonify({
-        "mensaje": "🎉 Bienvenido a AgentesaAI.com - Prueba gratuita de 14 días disponible",
-        "endpoints": [
-            "/visitar (POST)",
-            "/descargar (GET)",
-            "/comentar (POST)",
-            "/comentarios (GET)",
-            "/estadisticas (GET)",
-            "/activar (POST)"
-        ]
-    })
+    return render_template("index.html")
 
 @app.route("/visitar", methods=["POST"])
 def aumentar_visitas():
@@ -123,6 +113,7 @@ def activar_cliente():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
 
