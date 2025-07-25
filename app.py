@@ -34,7 +34,7 @@ def cargar_json(nombre):
 def guardar_json(nombre, data):
     with open(os.path.join(DATA_FOLDER, nombre), "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
-
+        
 @app.route("/", methods=["GET"])
 def inicio():
     return render_template("index.html")
