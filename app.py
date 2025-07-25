@@ -1,4 +1,4 @@
-print("Bienvenido a Cerberu")
+print("Bienvenido a AgentesaAI.com 🚀")
 
 import os
 import json
@@ -37,7 +37,17 @@ def guardar_json(nombre, data):
 
 @app.route("/", methods=["GET"])
 def inicio():
-    return render_template("index.html")
+    return jsonify({
+        "mensaje": "🎉 Bienvenido a AgentesaAI.com - Prueba gratuita de 14 días disponible",
+        "endpoints": [
+            "/visitar (POST)",
+            "/descargar (GET)",
+            "/comentar (POST)",
+            "/comentarios (GET)",
+            "/estadisticas (GET)",
+            "/activar (POST)"
+        ]
+    })
 
 @app.route("/visitar", methods=["POST"])
 def aumentar_visitas():
@@ -84,17 +94,27 @@ def activar_cliente():
     if user_id not in usuarios:
         hoy = datetime.date.today().isoformat()
         usuarios[user_id] = {"fecha_inicio": hoy}
-        mensaje = "¡Bienvenido! Tu prueba gratuita de 14 días ha comenzado hoy."
+        mensaje = (
+            "🎁 ¡Bienvenido a AgentesaAI! Has activado tu prueba gratuita de 14 días. "
+            "Disfruta del poder de la inteligencia artificial personalizada."
+        )
     else:
         fecha_inicio = datetime.date.fromisoformat(usuarios[user_id]["fecha_inicio"])
         dias = (datetime.date.today() - fecha_inicio).days
         if dias < 14:
             if dias == 13:
-                mensaje = "⚠️ ¡Último día de tu prueba gratuita! Suscríbete para seguir usando Cerberu."
+                mensaje = (
+                    "⚠️ ¡Último día de tu prueba gratuita! "
+                    "Adquiere la suscripción mensual o licencia permanente para seguir usando AgentesaAI sin interrupciones."
+                )
             else:
-                mensaje = f"🧪 Estás en tu día {dias+1} de prueba gratuita."
+                mensaje = f"🧪 Estás en el día {dias+1} de tu prueba gratuita de AgentesaAI."
         else:
-            mensaje = "⛔ Tu prueba gratuita ha finalizado. Activa una suscripción para continuar."
+            mensaje = (
+                "⛔ Tu prueba gratuita ha finalizado. "
+                "Para seguir disfrutando de todas las funciones, suscríbete por $19.99 USD/mes o compra la licencia por $100 USD. "
+                "Gracias por probar AgentesaAI."
+            )
 
     activaciones["usuarios"] = usuarios
     guardar_json("activaciones.json", activaciones)
@@ -103,5 +123,6 @@ def activar_cliente():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
 
 
