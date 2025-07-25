@@ -1,4 +1,4 @@
-streamlit
+como va tostreamlit
 openai
 pandas
 matplotlib
